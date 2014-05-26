@@ -253,7 +253,7 @@ class acf_field_select extends acf_field
 		{
 			foreach( $field['value'] as $value )
 			{
-				if( !in_array($value, array_keys($choices)) )
+				if( $value !== '' && !in_array($value, array_keys($choices)) )
 				{
 					echo '<option value="'.$value.'" selected="selected">' . $value . '</option>';
 				}
