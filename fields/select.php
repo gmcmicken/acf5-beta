@@ -128,7 +128,7 @@ class acf_field_select extends acf_field
 	{
 		// vars
 		$optgroup = false;
-		
+		$choices = array();
 		
 		// determin if choices are grouped (2 levels of array)
 		if( is_array($field['choices']) )
@@ -138,7 +138,11 @@ class acf_field_select extends acf_field
 				if( is_array($v) )
 				{
 					$optgroup = true;
-					break;
+					$choices = array_merge($choices, $v);
+				}
+				else
+				{
+					$choices[$k] = $v;
 				}
 			}
 		}
@@ -244,8 +248,21 @@ class acf_field_select extends acf_field
 		}
 		
 		
-		// loop through values and add them as options
-		if( is_array($field['choices']) )
+		// loop through current selected and add any orphaned items as options
+		if( is_array($field['value']) && count($field['value']) )
+		{
+			foreach( $field['value'] as $value )
+			{
+				if( !in_array($value, array_keys($choices)) )
+				{
+					echo '<option value="'.$value.'" selected="selected">' . $value . '</option>';
+				}
+			}
+		}
+		
+		
+		// loop through all defined choices and add them as options
+		if( is_array($field['choices']) && count($field['choices']) )
 		{
 			foreach( $field['choices'] as $key => $value )
 			{
